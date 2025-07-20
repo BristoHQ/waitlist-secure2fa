@@ -33,7 +33,17 @@ export default function WaitlistLanding() {
         throw new Error("Failed to join waitlist");
       }
 
-      const data = await response.json();
+      // Handle both JSON and text responses
+      const contentType = response.headers.get("content-type");
+      let data;
+
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        // Handle text response
+        data = await response.text();
+      }
+
       console.log("Form submitted successfully:", data);
       setSubmitted(true);
     } catch (err) {
