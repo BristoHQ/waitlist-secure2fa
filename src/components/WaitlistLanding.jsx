@@ -2,147 +2,129 @@ import React, { useState } from "react";
 import "./WaitlistLanding.css";
 
 export default function WaitlistLanding() {
-  const [form, setForm] = useState({ name: "", email: "" });
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [showUpdateCard, setShowUpdateCard] = useState(false);
   const brand = "Secure2FA";
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-
-    try {
-      // Replace with your actual API endpoint
-      const response = await fetch(
-        "http://helya.wisp.uno:12340/api/waitlist/signup?email=" + form.email,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to join waitlist");
-      }
-
-      // Handle both JSON and text responses
-      const contentType = response.headers.get("content-type");
-      let data;
-
-      if (contentType && contentType.includes("application/json")) {
-        data = await response.json();
-      } else {
-        // Handle text response
-        data = await response.text();
-      }
-
-      console.log("Form submitted successfully:", data);
-      setSubmitted(true);
-    } catch (err) {
-      console.error("Error submitting form:", err);
-      setError("Failed to join waitlist. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+  const toggleUpdateCard = () => {
+    setShowUpdateCard(!showUpdateCard);
   };
 
   return (
     <div className="waitlist-container">
       <nav className="waitlist-navbar">
         <div className="navbar-logo">{brand}</div>
-        <button className="navbar-updates-btn">Updates</button>
+        <button className="navbar-updates-btn" onClick={toggleUpdateCard}>
+          Updates
+        </button>
       </nav>
+
+      {showUpdateCard && (
+        <div className="update-card">
+          <div className="update-card-content">
+            <div className="update-card-header">
+              <h3>🔔 Latest Updates</h3>
+              <button className="update-card-close" onClick={toggleUpdateCard}>
+                ×
+              </button>
+            </div>
+            <div className="update-card-body">
+              <div className="update-item">
+                <span className="update-date">July 2025</span>
+                <p>Frontend work is under construction</p>
+              </div>
+              <div className="update-item">
+                <span className="update-date">July 2025</span>
+                <p>2FA Service Backend infrastructure overhaul completed</p>
+              </div>
+              <div className="update-item">
+                <span className="update-date">July 2025</span>
+                <p>Authentication Backend infrastructure overhaul completed</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <main className="waitlist-main">
         <div className="waitlist-content">
           <div className="main-logo">
-            <span>🚀</span>
+            <span>🔐</span>
           </div>
 
-          <h1 className="waitlist-title">Join Our Waitlist</h1>
+          <h1 className="waitlist-title">Secure2FA</h1>
 
           <p className="waitlist-description">
-            Be the first to experience our revolutionary platform. Get early
-            access and exclusive updates.
+            Advanced Two-Factor Authentication Web Platform
           </p>
 
-          {!submitted ? (
-            <div>
-              {error && (
-                <div
-                  style={{
-                    color: "#ff6b6b",
-                    marginBottom: "20px",
-                    padding: "10px",
-                    border: "1px solid #ff6b6b",
-                    borderRadius: "8px",
-                    backgroundColor: "rgba(255, 107, 107, 0.1)",
-                  }}
-                >
-                  {error}
-                </div>
-              )}
-              <form className="waitlist-form" onSubmit={handleSubmit}>
-                {/* <div className="form__group field">
-                  <input
-                    type="text"
-                    name="name"
-                    className="form__field"
-                    placeholder="Name"
-                    value={form.name}
-                    onChange={handleChange}
-                    required
-                    disabled={loading}
-                  />
-                  <label htmlFor="name" className="form__label">
-                    Full Name
-                  </label>
-                </div> */}
+          <div className="launching-soon">
+            <h2>🚀 Launching Soon</h2>
+            <p>Get ready for the next generation of secure authentication</p>
+          </div>
 
-                <div className="form__group field">
-                  <input
-                    type="email"
-                    name="email"
-                    className="form__field"
-                    placeholder="Email"
-                    value={form.email}
-                    onChange={handleChange}
-                    required
-                    disabled={loading}
-                  />
-                  <label htmlFor="email" className="form__label">
-                    Email Address
-                  </label>
-                </div>
+          <div className="project-details">
+            <div className="feature-grid">
+              <div className="feature-card">
+                <div className="feature-icon">🔑</div>
+                <h3>PIN Authentication</h3>
+                <p>
+                  Secure PIN-based login system with advanced encryption
+                  protocols
+                </p>
+              </div>
 
-                <button
-                  type="submit"
-                  className="waitlist-join-btn"
-                  disabled={loading}
-                >
-                  {loading ? "Joining..." : "Join Waitlist"}
-                </button>
-              </form>
+              <div className="feature-card">
+                <div className="feature-icon">🆘</div>
+                <h3>Emergency Login</h3>
+                <p>
+                  Emergency login protocol via .elp file generation for account
+                  recovery
+                </p>
+              </div>
+
+              <div className="feature-card">
+                <div className="feature-icon">🔒</div>
+                <h3>Full Encryption</h3>
+                <p>
+                  All data encrypted including full name, username, email, and
+                  sensitive information
+                </p>
+              </div>
+
+              <div className="feature-card">
+                <div className="feature-icon">🌐</div>
+                <h3>Web-Based Platform</h3>
+                <p>
+                  Complete 2FA authentication solution accessible through web
+                  browsers
+                </p>
+              </div>
             </div>
-          ) : (
-            <div className="waitlist-success">
-              <h2 style={{ color: "#667eea", marginBottom: "10px" }}>
-                🎉 You're In!
-              </h2>
+
+            <div className="tech-stack">
+              <h3>Technical Features</h3>
+              <div className="tech-items">
+                <span className="tech-item">End-to-End Encryption</span>
+                <span className="tech-item">PIN Authentication</span>
+                <span className="tech-item">Emergency Recovery</span>
+                <span className="tech-item">Secure File Generation</span>
+                <span className="tech-item">Data Protection</span>
+                <span className="tech-item">Web-Based Access</span>
+              </div>
+            </div>
+
+            <div className="security-info">
+              <h3>🛡️ Security First</h3>
               <p>
-                Thanks for joining our waitlist. We'll notify you when we
-                launch!
+                Our platform prioritizes security with comprehensive encryption
+                of all user data. From personal information like full names and
+                email addresses to authentication credentials, everything is
+                protected using industry-standard encryption protocols. The
+                emergency login system ensures you never lose access to your
+                account while maintaining the highest security standards.
               </p>
             </div>
-          )}
+          </div>
         </div>
       </main>
 
